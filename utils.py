@@ -3,7 +3,7 @@ import random
 import enchant
 from io import BytesIO
 from pathlib import Path
-from typing import Tuple
+from typing import Tuple, Dict
 from PIL import ImageFont
 from PIL.Image import Image as IMG
 from PIL.ImageFont import FreeTypeFont
@@ -27,8 +27,13 @@ def random_word(dic_name: str = "CET4", word_length: int = 5) -> Tuple[str, str]
         data: dict = json.load(f)
         data = {k: v for k, v in data.items() if len(k) == word_length}
         word = random.choice(list(data.keys()))
-        meaning = data[word]["中释"]
+        meaning = data[word]["中释"].strip()
         return word, meaning
+
+
+def get_word_list() -> dict:
+    with (words_dir / f"words_by_len.json").open("r", encoding="utf-8") as fp:
+        return json.load(fp)
 
 
 def save_png(frame: IMG) -> BytesIO:
